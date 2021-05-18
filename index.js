@@ -16,7 +16,7 @@ const allowedOrigins = [
     'https://scoreboard-app.niepokorni.pl',
     'http://scoreboard-app.niepokorni.pl',
     'https://scoreboard-app.niepokorni.pl/',
-    'http://scoreboard-app.niepokorni.pl/',
+    'http://scoreboard-app.niepokorni.pl/'
 ];
 
 mongoose.connect(process.env.db, {
@@ -43,13 +43,6 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(index);
-app.use('/scoreboard', Scoreboard);
-
-app.use(function(req, res) {
-    res.status(404).send({ url: req.originalUrl + ' not found' })
-});
-
 const server = http.createServer(app);
 
 const io = new Server(server);
@@ -57,11 +50,18 @@ const io = new Server(server);
 io.on("connection", (socket) => {
     console.log('New Connection');
 
-    socket.emit('scoreboard-app-data', Scoreboard);
+
 
     socket.on("disconnect", () => {
         console.log("Client disconnected");
     });
+});
+
+app.use(index);
+app.use('/scoreboard', Scoreboard);
+
+app.use(function(req, res) {
+    res.status(404).send({ url: req.originalUrl + ' not found' })
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
