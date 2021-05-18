@@ -1,4 +1,5 @@
 const ScoreboardModel = require('../models/ScoreboardModel.js');
+const { Server } = require("socket.io");
 
 /**
  * ScoreboardController.js
@@ -116,6 +117,8 @@ module.exports = {
                         error: err
                     });
                 }
+
+
                 return res.json(Scoreboard);
             });
         });

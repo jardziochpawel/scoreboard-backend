@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require("express");
 const http = require("http");
-const { Server } = require("socket.io");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -9,13 +8,14 @@ const bodyParser = require('body-parser');
 const port = 4001;
 const index = require("./routes/index");
 const Scoreboard = require('./routes/ScoreboardRoutes');
-const ScoreboardModel = require('./models/ScoreboardModel.js');
 
 const app = express();
 const allowedOrigins = [
     'http://localhost:3000',
     'https://scoreboard-app.niepokorni.pl',
-    'http://scoreboard-app.niepokorni.pl'
+    'http://scoreboard-app.niepokorni.pl',
+    'https://scoreboard-app.niepokorni.pl/',
+    'http://scoreboard-app.niepokorni.pl/',
 ];
 
 mongoose.connect(process.env.db, {
@@ -50,33 +50,17 @@ app.use(function(req, res) {
 });
 
 const server = http.createServer(app);
+
 const io = new Server(server);
-let interval;
 
 io.on("connection", (socket) => {
     console.log('New Connection');
 
-    if (interval) {
-        clearInterval(interval);
-    }
+    socket.emit('scoreboard-app-data', Scoreboard);
 
-    interval = setInterval(() => getApiAndEmit(socket), 1000);
     socket.on("disconnect", () => {
         console.log("Client disconnected");
-        clearInterval(interval);
     });
 });
-
-const getApiAndEmit  = async (socket) => {
-    await ScoreboardModel.findOne({_id: '60a17e5c75ef8d9af22dd94c'}, function (err, Scoreboard) {
-        if (err) {
-            console.log(err);
-        }
-        if (!Scoreboard) {
-            console.log('404');
-        }
-        socket.emit('scoreboard-app-data', Scoreboard);
-    });
-}
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
