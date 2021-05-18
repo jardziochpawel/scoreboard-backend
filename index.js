@@ -4,6 +4,7 @@ const http = require("http");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { Server } = require("socket.io");
 
 const port = 4001;
 const index = require("./routes/index");

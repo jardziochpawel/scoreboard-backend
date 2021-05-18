@@ -1,5 +1,4 @@
 const ScoreboardModel = require('../models/ScoreboardModel.js');
-const { Server } = require("socket.io");
 
 /**
  * ScoreboardController.js
