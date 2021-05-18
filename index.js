@@ -4,11 +4,12 @@ const http = require("http");
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { Server } = require("socket.io");
+const { io } = require("./utils/socket");
 
 const port = 4001;
 const index = require("./routes/index");
 const Scoreboard = require('./routes/ScoreboardRoutes');
+const ScoreboardModel = require('./models/ScoreboardModel');
 
 const app = express();
 const allowedOrigins = [
@@ -44,18 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const server = http.createServer(app);
-
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-    console.log('New Connection');
-
-
-
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-    });
-});
+io.attach(server);
 
 app.use(index);
 app.use('/scoreboard', Scoreboard);
@@ -65,3 +55,5 @@ app.use(function(req, res) {
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;

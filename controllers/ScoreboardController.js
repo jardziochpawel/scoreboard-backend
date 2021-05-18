@@ -1,4 +1,5 @@
 const ScoreboardModel = require('../models/ScoreboardModel.js');
+const { Socket } = require("../utils/socket");
 
 /**
  * ScoreboardController.js
@@ -108,13 +109,14 @@ module.exports = {
 			Scoreboard.pointsTeamB = req.body.pointsTeamB !== null ? req.body.pointsTeamB : Scoreboard.pointsTeamB;
 
             Scoreboard.save(function (err, Scoreboard) {
-                console.log(Scoreboard);
                 if (err) {
                     return res.status(500).json({
                         message: 'Error when updating Scoreboard.',
                         error: err
                     });
                 }
+
+                Socket.emit('scoreboard-app-data', Scoreboard);
 
                 return res.json(Scoreboard);
             });
