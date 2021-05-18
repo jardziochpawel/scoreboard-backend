@@ -108,7 +108,6 @@ module.exports = {
 			Scoreboard.pointsTeamA = req.body.pointsTeamA !== null ? req.body.pointsTeamA : Scoreboard.pointsTeamA;
 			Scoreboard.pointsTeamB = req.body.pointsTeamB !== null ? req.body.pointsTeamB : Scoreboard.pointsTeamB;
 
-			console.log(req.body.fightersTeamB);
             Scoreboard.save(function (err, Scoreboard) {
                 console.log(Scoreboard);
                 if (err) {
@@ -117,7 +116,6 @@ module.exports = {
                         error: err
                     });
                 }
-
 
                 return res.json(Scoreboard);
             });
