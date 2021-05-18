@@ -13,7 +13,9 @@ const ScoreboardModel = require('./models/ScoreboardModel.js');
 
 const app = express();
 const allowedOrigins = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://scoreboard-app.niepokorni.pl/',
+    'http://scoreboard-app.niepokorni.pl/'
 ];
 
 mongoose.connect(process.env.db, {
