@@ -5,6 +5,7 @@ const ScoreboardSchema = new Schema({
 	'time' : Number,
 	'reset' : Boolean,
 	'start' : Boolean,
+	'pause' : Boolean,
 	'teamA' : {
 		label: { type: String },
 		logo: { type: String },
