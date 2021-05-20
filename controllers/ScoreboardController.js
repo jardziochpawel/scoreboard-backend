@@ -102,7 +102,7 @@ module.exports = {
             Scoreboard.time = req.body.time !== null ? req.body.time : Scoreboard.time;
 			Scoreboard.reset = req.body.reset !== null  ? req.body.reset : Scoreboard.reset;
             Scoreboard.start = req.body.start !== null ? req.body.start : Scoreboard.start;
-            Scoreboard.pause = req.body.pause !== null ? req.body.start : Scoreboard.pause;
+            Scoreboard.pause = req.body.pause !== null ? req.body.pause : Scoreboard.pause;
 			Scoreboard.teamA = req.body.teamA !== null  ? req.body.teamA : Scoreboard.teamA;
 			Scoreboard.teamB = req.body.teamB !== null ? req.body.teamB : Scoreboard.teamB;
 			Scoreboard.fightersTeamA = req.body.fightersTeamA !== null ? req.body.fightersTeamA : Scoreboard.fightersTeamA;
