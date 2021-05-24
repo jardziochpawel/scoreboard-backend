@@ -44,6 +44,7 @@ app.use(cors({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 const timer = new Timer();
 
 const timerApi = ({_id, start, pause, time, reset}, client) => {
@@ -92,12 +93,9 @@ const timerApi = ({_id, start, pause, time, reset}, client) => {
 
 const server = http.createServer(app);
 io.attach(server);
-
 io.on('connection', function (client) {
     client.on('timer-data', data => {
-
         timerApi(data, client);
-
     })
     client.on('disconnect', function () {
         console.log('disconnected')
