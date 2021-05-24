@@ -111,12 +111,6 @@ module.exports = {
 			Scoreboard.pointsTeamB = req.body.pointsTeamB !== null ? req.body.pointsTeamB : Scoreboard.pointsTeamB;
 
             Scoreboard.save(function (err, Scoreboard) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating Scoreboard.',
-                        error: err
-                    });
-                }
 
                 Socket.emit('scoreboard-app-data', Scoreboard);
 
