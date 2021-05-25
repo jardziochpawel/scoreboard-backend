@@ -48,12 +48,34 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+const findScoreboardAndUpdate = (_id, client) => {
+    ScoreboardModel.findOne({_id: _id}, function (err, Scoreboard) {
+        if (err) {
+            return console.log('500', err);
+        }
+
+        if (!Scoreboard) {
+            return console.log('404');
+        }
+
+        Scoreboard.reset = false;
+        Scoreboard.pause = false;
+        Scoreboard.start = false;
+
+        Scoreboard.save(function (err, Scoreboard){
+            client.emit('timer-data', Scoreboard);
+            return client.emit('scoreboard-app-data', Scoreboard);
+        })
+    });
+}
+
 const timerApi = ({_id, start, pause, time, reset}, client) => {
     let seconds = ("0" + (Math.floor((time / 1000) % 60) % 60)).slice(-2);
     let minutes = ("0" + Math.floor((time / 60000) % 60)).slice(-2);
 
-    if(!start && !timer.isRunning()){
+    if(!start){
         client.emit('timer', minutes +' : '+ seconds);
+        timer.stop();
     }
 
     if(start && !timer.isRunning()) {
@@ -65,29 +87,18 @@ const timerApi = ({_id, start, pause, time, reset}, client) => {
     }
 
     if(reset){
+        findScoreboardAndUpdate(_id, client);
         timer.reset();
         timer.stop();
-
-        ScoreboardModel.findOne({_id: _id}, function (err, Scoreboard) {
-            if (err) {
-                return console.log('500', err);
-            }
-
-            if (!Scoreboard) {
-                return console.log('404');
-            }
-
-            Scoreboard.reset = false;
-
-            Scoreboard.save(function (err, Scoreboard){
-                return client.emit('scoreboard-app-data', Scoreboard);
-            })
-        });
     }
 
     timer.addEventListener("secondsUpdated", function (e) {
         if(!timer.isPaused()){
             client.emit('timer', timer.getTimeValues().toString(['minutes', 'seconds']));
+        }
+        if(Number(timer.getTimeValues().seconds) === 0 && Number(timer.getTimeValues().minutes) === 0){
+            findScoreboardAndUpdate(_id, client);
+            timer.reset();
         }
     });
 }
