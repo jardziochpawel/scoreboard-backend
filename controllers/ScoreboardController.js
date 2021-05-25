@@ -11,8 +11,8 @@ module.exports = {
     /**
      * ScoreboardController.list()
      */
-    list: function (req, res) {
-        ScoreboardModel.find(function (err, Scoreboards) {
+    list: async function (req, res) {
+        await ScoreboardModel.find(function (err, Scoreboards) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting Scoreboard.',
@@ -27,10 +27,10 @@ module.exports = {
     /**
      * ScoreboardController.show()
      */
-    show: function (req, res) {
+    show: async function (req, res) {
         const id = req.params.id;
 
-        ScoreboardModel.findOne({_id: id}, function (err, Scoreboard) {
+        await ScoreboardModel.findOne({_id: id}, function (err, Scoreboard) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting Scoreboard.',

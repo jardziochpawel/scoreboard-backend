@@ -10,6 +10,9 @@ const Timer = require("easytimer.js").Timer;
 const port = 4001;
 const index = require("./routes/index");
 const Scoreboard = require('./routes/ScoreboardRoutes');
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
+
 const ScoreboardModel = require('./models/ScoreboardModel');
 
 const app = express();
@@ -45,12 +48,10 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const timer = new Timer();
-
 const timerApi = ({_id, start, pause, time, reset}, client) => {
-
     let seconds = ("0" + (Math.floor((time / 1000) % 60) % 60)).slice(-2);
     let minutes = ("0" + Math.floor((time / 60000) % 60)).slice(-2);
+
     if(!start && !timer.isRunning()){
         client.emit('timer', minutes +' : '+ seconds);
     }
@@ -65,7 +66,7 @@ const timerApi = ({_id, start, pause, time, reset}, client) => {
 
     if(reset){
         timer.reset();
-        timer.pause();
+        timer.stop();
 
         ScoreboardModel.findOne({_id: _id}, function (err, Scoreboard) {
             if (err) {
@@ -93,6 +94,9 @@ const timerApi = ({_id, start, pause, time, reset}, client) => {
 
 const server = http.createServer(app);
 io.attach(server);
+
+const timer = new Timer();
+
 io.on('connection', function (client) {
     client.on('timer-data', data => {
         timerApi(data, client);
@@ -103,6 +107,8 @@ io.on('connection', function (client) {
 });
 
 app.use(index);
+app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 app.use('/scoreboard', Scoreboard);
 
 app.use(function(req, res) {

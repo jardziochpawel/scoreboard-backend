@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ScoreboardController = require('../controllers/ScoreboardController.js');
+const authMiddleware = require('../authMiddleware');
 
 /*
  * GET
@@ -15,16 +16,16 @@ router.get('/:id', ScoreboardController.show);
 /*
  * POST
  */
-router.post('/', ScoreboardController.create);
+router.post('/', authMiddleware.ensureAuthenticated, ScoreboardController.create);
 
 /*
  * PUT
  */
-router.put('/:id', ScoreboardController.update);
+router.put('/:id', authMiddleware.ensureAuthenticated, ScoreboardController.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', ScoreboardController.remove);
+router.delete('/:id', authMiddleware.ensureAuthenticated, ScoreboardController.remove);
 
 module.exports = router;
