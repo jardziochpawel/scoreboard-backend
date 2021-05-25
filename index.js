@@ -99,6 +99,7 @@ const timerApi = ({_id, start, pause, time, reset}, client) => {
         if(Number(timer.getTimeValues().seconds) === 0 && Number(timer.getTimeValues().minutes) === 0){
             findScoreboardAndUpdate(_id, client);
             timer.reset();
+            timer.stop();
         }
     });
 }
