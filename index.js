@@ -16,6 +16,7 @@ const authRoutes = require('./routes/authRoutes');
 const ScoreboardModel = require('./models/ScoreboardModel');
 
 const app = express();
+
 const allowedOrigins = [
     'http://localhost:3000',
     'https://scoreboard-app.niepokorni.pl',
