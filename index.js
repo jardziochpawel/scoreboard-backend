@@ -78,7 +78,7 @@ const timerApi = (data, client) => {
     let seconds = ("0" + (Math.floor((time / 1000) % 60) % 60)).slice(-2);
     let minutes = ("0" + Math.floor((time / 60000) % 60)).slice(-2);
 
-    if(!start && !timer.isRunning()){
+    if(!start && !pause){
         client.emit('timer', minutes +' : '+ seconds);
         timer.stop();
     }
