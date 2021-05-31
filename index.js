@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { io } = require("./utils/socket");
 const Timer = require("easytimer.js").Timer;
+const timer = new Timer();
 
 const port = 4001;
 const index = require("./routes/index");
@@ -77,7 +78,7 @@ const timerApi = (data, client) => {
     let seconds = ("0" + (Math.floor((time / 1000) % 60) % 60)).slice(-2);
     let minutes = ("0" + Math.floor((time / 60000) % 60)).slice(-2);
 
-    if(!start && !pause){
+    if(!start && !timer.isRunning()){
         client.emit('timer', minutes +' : '+ seconds);
         timer.stop();
     }
@@ -116,8 +117,6 @@ const timerApi = (data, client) => {
 
 const server = http.createServer(app);
 io.attach(server);
-
-const timer = new Timer();
 
 io.on('connection', function (client) {
     client.on('timer-data', data => {
