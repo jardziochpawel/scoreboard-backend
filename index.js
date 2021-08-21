@@ -96,7 +96,7 @@ const timerApi = (data, client) => {
     }
 
     if(reset){
-        findScoreboardAndUpdate(_id, client, false, false);
+        findScoreboardAndUpdate(_id, client, start, pause);
         timer.reset();
         timer.stop();
     }
